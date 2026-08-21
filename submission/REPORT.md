@@ -131,6 +131,8 @@ Cố định vị trí ở text-linear (giống correct), chỉ đổi rank r tr
 
 Khi nào rank mới là đòn bẩy: rõ ràng ở khoảng rank thấp. Từ r=8 lên r=16, target nhảy từ 0.070 lên 0.970, gần như từ không học được gì sang gần hoàn hảo. Nhưng từ r=16 lên r=64, target chỉ nhích thêm 0.025 (0.970 lên 0.995), format đã đứng yên ở 1.000 từ r=16. Điều này cho thấy rank chỉ là đòn bẩy mạnh khi nó còn dưới ngưỡng đủ để mã hoá task, ở đây ngưỡng đó nằm đâu đó giữa 8 và 16. Qua khỏi ngưỡng, tăng rank thêm chỉ mang lại cải thiện biên rất nhỏ, đổi lại là nhiều tham số huấn luyện hơn, VRAM cao hơn, không đáng đánh đổi. r=16 mà lab chọn làm cấu hình correct đã nằm đúng vùng hợp lý: đủ cao để qua ngưỡng học được task, không cao tới mức lãng phí tham số như r=64.
 
+Adapter r=64 (496MB, không đưa lên GitHub vì vượt giới hạn 100MB) được lưu tại HuggingFace: https://huggingface.co/QuangAnh0112/lab21-rank-r64-experiment
+
 ---
 
 ## Phụ lục - thưởng đã làm
