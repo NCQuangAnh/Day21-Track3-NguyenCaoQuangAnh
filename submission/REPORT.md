@@ -119,10 +119,24 @@ Nếu có thêm 2 giờ nữa, em sẽ thử: trộn 5% dữ liệu phổ thông
 
 ---
 
+## Phụ lục B4 - quét rank có kiểm soát
+
+Cố định vị trí ở text-linear (giống correct), chỉ đổi rank r trong {8, 16, 64}, cùng LR 10x và cùng số step. r=16 chính là run correct đã có sẵn, không train lại.
+
+| r | target | format | n |
+|---|---|---|---|
+| 8 | 0.070 | 0.150 | 50 |
+| 16 (= correct) | 0.970 | 1.000 | 50 |
+| 64 | 0.995 | 1.000 | 50 |
+
+Khi nào rank mới là đòn bẩy: rõ ràng ở khoảng rank thấp. Từ r=8 lên r=16, target nhảy từ 0.070 lên 0.970, gần như từ không học được gì sang gần hoàn hảo. Nhưng từ r=16 lên r=64, target chỉ nhích thêm 0.025 (0.970 lên 0.995), format đã đứng yên ở 1.000 từ r=16. Điều này cho thấy rank chỉ là đòn bẩy mạnh khi nó còn dưới ngưỡng đủ để mã hoá task, ở đây ngưỡng đó nằm đâu đó giữa 8 và 16. Qua khỏi ngưỡng, tăng rank thêm chỉ mang lại cải thiện biên rất nhỏ, đổi lại là nhiều tham số huấn luyện hơn, VRAM cao hơn, không đáng đánh đổi. r=16 mà lab chọn làm cấu hình correct đã nằm đúng vùng hợp lý: đủ cao để qua ngưỡng học được task, không cao tới mức lãng phí tham số như r=64.
+
+---
+
 ## Phụ lục - thưởng đã làm
 
 - [ ] B1 NB6 merge + hot-swap
 - [ ] B2 dataset miền riêng (`data/CUSTOM_DATASET.md`)
 - [ ] B3 reasoning-trace collapse (hai MASK_MODE, kèm valid_trace_rate)
-- [ ] B4 quét rank có kiểm soát
+- [x] B4 quét rank có kiểm soát
 - [x] B5 HuggingFace Hub, link: https://huggingface.co/QuangAnh0112/lab21-vi-ticket-triage-lora
