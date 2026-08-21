@@ -59,7 +59,7 @@ Phần system và user turn không xuất hiện ở đây, chỉ có `</think>`
 
 | Run | vị trí | r | trainable | LR | train loss (NB4) | target (NB5 muc 4) | s | VRAM GB |
 |---|---|---|---|---|---|---|---|---|
-| `correct` | text-linear | 16 | 32,464,896 | 1e-4 | 0.6263 | 0.97 | 925.0 | 12.01 |
+| `correct` | text-linear | 16 | 32,464,896 | 1e-4 | 0.6267 | 0.97 | 921.1 | 12.01 |
 | `attn_only` | q,v | 283 (matched) | 32,456,704 | 1e-4 | 0.5377 | 0.97 | 816.8 | 12.02 |
 | `wrong_lr` | text-linear | 16 | 32,464,896 | 1e-5 | 1.5704 | 0.00 | 949.6 | 12.01 |
 | `qlora` | text-linear | 16 | 32,464,896 | 1e-4 | 0.7058 | 0.94 | 1016.8 | 7.09 |
@@ -68,7 +68,7 @@ Xếp hạng theo cột target, không theo train loss.
 
 **4.1 - attn_only có cùng số tham số huấn luyện với correct (32,456,704 so với 32,464,896, lệch 0.025%, trong ngưỡng dưới 5%). Trên tập target nó thắng, thua hay hoà? Thứ tự đó có giống train loss không? Nói gì về rank so với vị trí gắn adapter?**
 
-attn_only hoà tuyệt đối với correct trên target, 0.97 bằng 0.97, dù chỉ gắn vào q,v thay vì toàn bộ lớp linear. Xếp theo train loss lại ra thứ tự ngược: attn_only có loss thấp hơn (0.5377 so với 0.6263). Nếu chỉ nhìn loss sẽ nghĩ attn_only học tốt hơn, nhưng target score cho thấy hai run ngang nhau về khả năng thật. Cùng một ngân sách tham số, khi rank được nâng đủ cao để bù cho vị trí hẹp (r=283 so với r=16), rank mới là đòn bẩy chính, không phải vị trí gắn adapter, miễn ngân sách tham số công bằng. Loss thấp hơn ở attn_only không phản ánh khả năng tổng quát tốt hơn, chỉ là kết quả của việc tối ưu trên ít module hơn với magnitude gradient khác. Đây là lý do không được xếp hạng bằng train loss.
+attn_only hoà tuyệt đối với correct trên target, 0.97 bằng 0.97, dù chỉ gắn vào q,v thay vì toàn bộ lớp linear. Xếp theo train loss lại ra thứ tự ngược: attn_only có loss thấp hơn (0.5377 so với 0.6267). Nếu chỉ nhìn loss sẽ nghĩ attn_only học tốt hơn, nhưng target score cho thấy hai run ngang nhau về khả năng thật. Cùng một ngân sách tham số, khi rank được nâng đủ cao để bù cho vị trí hẹp (r=283 so với r=16), rank mới là đòn bẩy chính, không phải vị trí gắn adapter, miễn ngân sách tham số công bằng. Loss thấp hơn ở attn_only không phản ánh khả năng tổng quát tốt hơn, chỉ là kết quả của việc tối ưu trên ít module hơn với magnitude gradient khác. Đây là lý do không được xếp hạng bằng train loss.
 
 **4.2 - wrong_lr chỉ khác đúng một con số (LR 1e-5 thay vì 1e-4). Đường loss khác thế nào? Nếu chỉ nhìn loss mà không biết LR sẽ kết luận sai điều gì?**
 
