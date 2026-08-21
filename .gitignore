@@ -37,3 +37,4 @@ hf_cache/
 .idea/
 .vscode/
 *.swp
+adapters/correct/adapter_model.safetensors
