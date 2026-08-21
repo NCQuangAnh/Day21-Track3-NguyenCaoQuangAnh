@@ -105,17 +105,31 @@ Ghi chú: tập target (ticket triage) không có ca fine-tune thua rõ ràng, �
 
 ---
 
-## 7. Kết luận và điều tôi học được
+## 7. Kết luận và điều em học được
 
 Kết luận: không nên deploy bản fine-tune correct này ở dạng hiện tại. Trên đúng domain train (ticket CSKH sang JSON triage), nó thắng áp đảo baseline đã prompt tối ưu (+0.205 target, format hoàn hảo, latency chấp nhận được). Nếu chỉ nhìn target, đây là một case fine-tune thành công. Nhưng cổng hồi quy bốn nhóm bắt được cái giá ẩn: model đánh đổi 0.236 điểm regression, tức khả năng trả lời câu hỏi phổ thông, để lấy độ chính xác trong domain hẹp. Đây là lý do lab thiết kế cổng hồi quy riêng thay vì chỉ nhìn target score, vì nếu chỉ đo target, verdict sẽ là PASSED và quyết định deploy sẽ sai. Đòn bẩy thật sự trong lab này không phải vị trí gắn adapter, vì attn_only và correct hoà nhau khi ngân sách tham số công bằng (mục 4.1), mà là chất lượng và độ đa dạng dữ liệu train. 250 mẫu train thuần một domain, không trộn dữ liệu phổ thông, là nguyên nhân trực tiếp gây catastrophic forgetting, không phải cấu hình LoRA hay learning rate. Ba run đối chứng ở NB4 (attn_only, wrong_lr, qlora) đều chỉ so trong cùng domain train, không cái nào chạm vào vấn đề regression. Hướng đi đúng tiếp theo là trộn 1-5% dữ liệu phổ thông vào training set rồi đo lại cổng hồi quy, chứ không phải chỉnh rank hay vị trí adapter thêm nữa.
 
-Ba điều tôi học được:
+Ba điều em học được:
 
 1. Train loss thấp không đồng nghĩa model tốt hơn. attn_only có loss thấp hơn correct nhưng target score bằng nhau, chứng minh rằng xếp hạng bằng loss thay vì eval task thật là sai lầm phương pháp, không chỉ là lý thuyết suông.
 2. Một fine-tune có thể thắng áp đảo trên chính benchmark nó được tối ưu cho, và vẫn là quyết định sai để deploy. Nếu không đo riêng khả năng tổng quát bằng một tập độc lập, sẽ không bao giờ phát hiện ra cái giá đã trả.
 3. EVAL_LIMIT (smoke mode) không chỉ chạy nhanh hơn, nó còn làm verdict kém tin cậy vì n quá nhỏ. Chạy với n=8 ban đầu cho kết quả khác hẳn n=50 đầy đủ, nên phải luôn kiểm smoke_mode trong results trước khi tin bất kỳ con số nào.
 
-Nếu có thêm 2 giờ nữa, tôi sẽ thử: trộn 5% dữ liệu phổ thông (câu hỏi chung, không liên quan ticket) vào 250 mẫu train, train lại correct, và so sánh trực tiếp regression delta trước và sau. Đây là bài kiểm chứng trực tiếp cho giả thuyết đưa ra ở mục 5.
+Nếu có thêm 2 giờ nữa, em sẽ thử: trộn 5% dữ liệu phổ thông (câu hỏi chung, không liên quan ticket) vào 250 mẫu train, train lại correct, và so sánh trực tiếp regression delta trước và sau. Đây là bài kiểm chứng trực tiếp cho giả thuyết đưa ra ở mục 5.
+
+---
+
+## Phụ lục B4 - quét rank có kiểm soát
+
+Cố định vị trí ở text-linear (giống correct), chỉ đổi rank r trong {8, 16, 64}, cùng LR 10x và cùng số step. r=16 chính là run correct đã có sẵn, không train lại.
+
+| r | target | format | n |
+|---|---|---|---|
+| 8 | 0.070 | 0.150 | 50 |
+| 16 (= correct) | 0.970 | 1.000 | 50 |
+| 64 | 0.995 | 1.000 | 50 |
+
+Khi nào rank mới là đòn bẩy: rõ ràng ở khoảng rank thấp. Từ r=8 lên r=16, target nhảy từ 0.070 lên 0.970, gần như từ không học được gì sang gần hoàn hảo. Nhưng từ r=16 lên r=64, target chỉ nhích thêm 0.025 (0.970 lên 0.995), format đã đứng yên ở 1.000 từ r=16. Điều này cho thấy rank chỉ là đòn bẩy mạnh khi nó còn dưới ngưỡng đủ để mã hoá task, ở đây ngưỡng đó nằm đâu đó giữa 8 và 16. Qua khỏi ngưỡng, tăng rank thêm chỉ mang lại cải thiện biên rất nhỏ, đổi lại là nhiều tham số huấn luyện hơn, VRAM cao hơn, không đáng đánh đổi. r=16 mà lab chọn làm cấu hình correct đã nằm đúng vùng hợp lý: đủ cao để qua ngưỡng học được task, không cao tới mức lãng phí tham số như r=64.
 
 ---
 
@@ -124,5 +138,5 @@ Nếu có thêm 2 giờ nữa, tôi sẽ thử: trộn 5% dữ liệu phổ thô
 - [ ] B1 NB6 merge + hot-swap
 - [ ] B2 dataset miền riêng (`data/CUSTOM_DATASET.md`)
 - [ ] B3 reasoning-trace collapse (hai MASK_MODE, kèm valid_trace_rate)
-- [ ] B4 quét rank có kiểm soát
+- [x] B4 quét rank có kiểm soát
 - [x] B5 HuggingFace Hub, link: https://huggingface.co/QuangAnh0112/lab21-vi-ticket-triage-lora
