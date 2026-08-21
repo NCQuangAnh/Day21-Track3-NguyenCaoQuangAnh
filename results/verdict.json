@@ -3,35 +3,35 @@
     {
       "run": "(a) base + naive prompt",
       "target": 0.0,
-      "regression": 0.75,
+      "regression": 0.7578,
       "format": 0.0,
-      "latency_ms": 3272.3,
-      "n": 8
+      "latency_ms": 3249.0,
+      "n": 50
     },
     {
       "run": "(b) base + optimized prompt",
-      "target": 0.6875,
-      "regression": 0.75,
+      "target": 0.765,
+      "regression": 0.7578,
       "format": 1.0,
-      "latency_ms": 998.4,
-      "n": 8
+      "latency_ms": 1083.7,
+      "n": 50
     },
     {
       "run": "(c) LoRA fine-tune",
-      "target": 0.9375,
-      "regression": 0.875,
+      "target": 0.97,
+      "regression": 0.5222,
       "format": 1.0,
-      "latency_ms": 1505.5,
-      "n": 8
+      "latency_ms": 1384.6,
+      "n": 50
     }
   ],
   "verdict": {
-    "passed": true,
+    "passed": false,
     "reasons": [
-      "beat the optimized-prompt baseline by +0.250 with +0.125 general-capability change."
+      "general capability regressed by 0.236 (tolerance 0.020). See deck §14.3 — add 1-5% replay data."
     ],
-    "target_delta": 0.25,
-    "regression_delta": 0.125
+    "target_delta": 0.20499999999999996,
+    "regression_delta": -0.23555555555555552
   },
   "valid_trace_rate": 0.0
 }

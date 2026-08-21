@@ -1,30 +1,30 @@
 [
   {
     "run": "correct",
-    "target": 0.9375,
+    "target": 0.97,
     "format": 1.0,
-    "latency_ms": 1505.5,
-    "n": 8
+    "latency_ms": 1384.6,
+    "n": 50
   },
   {
     "run": "attn_only",
-    "target": 0.9375,
+    "target": 0.97,
     "format": 1.0,
-    "latency_ms": 917.3,
-    "n": 8
+    "latency_ms": 887.6,
+    "n": 50
   },
   {
     "run": "wrong_lr",
     "target": 0.0,
     "format": 0.0,
-    "latency_ms": 4976.9,
-    "n": 8
+    "latency_ms": 5008.5,
+    "n": 50
   },
   {
     "run": "qlora",
-    "target": 0.8438,
+    "target": 0.94,
     "format": 1.0,
-    "latency_ms": 1850.4,
-    "n": 8
+    "latency_ms": 1747.4,
+    "n": 50
   }
 ]
