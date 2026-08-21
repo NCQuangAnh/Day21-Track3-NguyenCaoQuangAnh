@@ -1,0 +1,21 @@
+[
+  {
+    "r": 8,
+    "target": 0.07,
+    "format": 0.15,
+    "n": 50
+  },
+  {
+    "r": 16,
+    "target": null,
+    "format": null,
+    "n": null,
+    "note": "reused from `correct` (results/autopsy.json / verdict.json comparison[c])"
+  },
+  {
+    "r": 64,
+    "target": 0.995,
+    "format": 1.0,
+    "n": 50
+  }
+]
